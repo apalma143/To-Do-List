@@ -1,174 +1,187 @@
-const todoInput = document.querySelector('todo-input');
-const todoButton = document.querySelector('todo-button');
-const filterOption = document.querySelector('filter-todo');
-const todoList = document.querySelector('todo-list');
-
-//Event Listener
-todoButton.addEventListener('click', addTodo);
-//load the task form local storage when the page is loaded
-document.addEventListener('DOMContentLoaded', getTodos);
-todoList.addEventListener('click', deletetTodo);
-filterOption.addEventListener('click', filterTodo);
+const todoInput = document.querySelector(".todo-input");
+const todoButton = document.querySelector(".todo-button");
+const filterOption = document.querySelector(".filter-todo");
+const todoList = document.querySelector(".todo-list");
 
 
-//function to save task in your local storage
-function saveLocalToDos(todo){
+
+//Event Listeners
+todoButton.addEventListener("click", addTodo);
+document.addEventListener("DOMContentLoaded", getTodos); //load the task from local storage when the pageis loaded
+todoList.addEventListener("click", deleteTodo);
+
+
+//Function to save task in your local storage
+function saveLocalTodos(todo) {
     let todos;
-    if (localStorage.getItem('todos') === null ) {
+    if (localStorage.getItem("todos") === null) {
         todos = [];
     } else {
-        todos = JSON.parse(localStorage.getItem('todos'));
+
+        todos = JSON.parse(localStorage.getItem("todos"));
+
     }
+
     todos.push(todo);
-    localStorage.setItem('todos', JSON.stringify('todos'));
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-//function to add new task
+//Function to add new task
+
 function addTodo(e) {
     //prevent form submission
     e.preventDefault();
+
     //create a new todo div
-    const todoDiv = document.createElement('div');
-    todoDiv.classList.add('todo');
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+
     //create a new list item for the task
-    const newTodo = document.createElement('li');
+    const newTodo = document.createElement("li");
     newTodo.innerText = todoInput.value;
 
-    //save the task to local storage
+
+    //Save the task to Local Storage
     saveLocalTodos(todoInput.value);
 
-    //add classes and append the new list item to the todo div
-    newTodo.classList.add('todo-item');
+    //Add classes and append the new list item to the todo div
+    newTodo.classList.add("todo-item");
     todoDiv.appendChild(newTodo);
-    todoInput.value="";
+    todoInput.value = "";
 
-    //create a button to mark the task as complete
-    const completeButton = document.createElement('button');
-    completeButton.innerHTML = `<i class= "fas fa-check"></i>`;
-    completeButton.classList.add('complete-btn');
+    //Create a button to mark the task as complete
+    const completeButton = document.createElement("button");
+    completeButton.innerHTML = `<i class="fas fa-check" ></i>`;
+    completeButton.classList.add("complete-btn");
     todoDiv.appendChild(completeButton);
 
     //create a button to delete a task
-    const trashButton = document.createElement('button');
-    trashButton.innerHTML = `<i class="fas fa-trash"></i>`;
-    trashButton.classList.add('trash-btn');
+    const trashButton = document.createElement("button");
+    trashButton.innerHTML = `<i class="fas fa-trash" ></i>`;
+    trashButton.classList.add("trash-btn");
     todoDiv.appendChild(trashButton);
 
-    //append the todo-div to todo-list
+    //append the todo div to todo list
     todoList.appendChild(todoDiv);
 }
 
-//Function will load task from local storage when the page is loaded
-function getTodos() {
+
+// Function will load  task from Local Storage when the page is loaded.
+function getTodos() {// Function to filter tasks based on completion status
     function filterTodo(e) {
         const todos = todoList.childNodes;
-        todos.forEach(function(todo) {
-          switch (e.target.value) {
-            case "all":
-              todo.style.display = "flex";
-              break;
-            case "completed":
-              if (todo.classList.contains("completed")) {
-                todo.style.display = "flex";
-              } else {
-                todo.style.display = "none";
-              }
-              break;
-            case "uncompleted":
-              if (!todo.classList.contains("completed")) {
-                todo.style.display = "flex";
-              } else {
-                todo.style.display = "none";
-              }
-          }
+        todos.forEach(function (todo) {
+            switch (e.target.value) {
+                case "all":
+                    todo.style.display = "flex";
+                    break;
+                case "completed":
+                    if (todo.classList.contains("completed")) {
+                        todo.style.display = "flex";
+                    } else {
+                        todo.style.display = "none";
+                    }
+                    break;
+                case "uncompleted":
+                    if (!todo.classList.contains("completed")) {
+                        todo.style.display = "flex";
+                    } else {
+                        todo.style.display = "none";
+                    }
+            }
         });
-      }
-      let todos;
-      if (localStorage.getItem("todos") === null) {
+    }
+    let todos;
+    if (localStorage.getItem("todos") === null) {
         todos = [];
-      } else {
+    } else {
         todos = JSON.parse(localStorage.getItem("todos"));
-      }
-      todos.forEach(function(todo) {
+    }
+    todos.forEach(function (todo) {
         // Create todo div
         const todoDiv = document.createElement("div");
         todoDiv.classList.add("todo");
-    
+
         // Create list item for the task
         const newTodo = document.createElement("li");
         newTodo.innerText = todo;
         newTodo.classList.add("todo-item");
         todoDiv.appendChild(newTodo);
         todoInput.value = "";
-    
+
         // Create complete button
         const completedButton = document.createElement("button");
         completedButton.innerHTML = `<i class="fas fa-check"></i>`;
         completedButton.classList.add("complete-btn");
         todoDiv.appendChild(completedButton);
-    
+
         // Create delete button
         const trashButton = document.createElement("button");
         trashButton.innerHTML = `<i class="fas fa-trash"></i>`;
         trashButton.classList.add("trash-btn");
         todoDiv.appendChild(trashButton);
-    
+
         // Append todo div to the todo list
         todoList.appendChild(todoDiv);
     });
+}
 
-    function deleteTodo(e) {
-        const item = e.target;
-        if (item.classList[0] === "trash-btn") {
-            // If the delete button is clicked, remove the task from the list
-            const todo = item.parentElement;
-            todo.classList.add("fall");
-            removeLocalTodos(todo);
-            todo.addEventListener("transitionend", e => {
+
+
+function deleteTodo(e) {
+    const item = e.target;
+
+    if (item.classList[0] === "trash-btn") {
+        // If the delete button is clicked, remove the task from the list
+        const todo = item.parentElement;
+        todo.classList.add("fall");
+        removeLocalTodos(todo);
+        todo.addEventListener("transitionend", e => {
             todo.remove();
-          });
-        }   
-        if (item.classList[0] === "complete-btn") {
-            // If the complete button is clicked, toggle the completed class
-            const todo = item.parentElement;
-            todo.classList.toggle("completed");
-        }
+        });
     }
-    
-    // 6. Function to remove tasks from localStorage
-    function removeLocalTodos(todo) {
-        let todos;
-        if (localStorage.getItem("todos") === null) {
-            todos = [];
-        } else {
-            todos = JSON.parse(localStorage.getItem("todos"));
-        }
-        const todoIndex = todo.children[0].innerText;
-        todos.splice(todos.indexOf(todoIndex), 1);
-        localStorage.setItem("todos", JSON.stringify(todos));
+
+    if (item.classList[0] === "complete-btn") {
+        // If the complete button is clicked, toggle the completed class
+        const todo = item.parentElement;
+        todo.classList.toggle("completed");
     }
-    //Filers the base of the value of the user
-    function filterTodo(e) {
-        const todos = todoList.childNodes;
-        todos.forEach(function(todo) {
-            switch (e.target.value) {
-                case "all":
-                    todo.style.display = "flex";
-                    break;
-                case "completed":
+}
+
+
+function removeLocalTodos(todo) {
+    let todos;
+    if (localStorage.getItem("todos") === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+    const todoIndex = todo.children[0].innerText;
+    todos.splice(todos.indexOf(todoIndex), 1);
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+
+function filterTodo(e) {
+    const todos = todoList.childNodes;
+    todos.forEach(function (todo) {
+        switch (e.target.value) {
+            case "all":
+                todo.style.display = "flex";
+                break;
+            case "completed":
                 if (todo.classList.contains("completed")) {
                     todo.style.display = "flex";
                 } else {
                     todo.style.display = "none";
                 }
                 break;
-                case "uncompleted":
+            case "uncompleted":
                 if (!todo.classList.contains("completed")) {
                     todo.style.display = "flex";
                 } else {
-                    todo.style.display = "none";    
+                    todo.style.display = "none";
                 }
-            }
-        });
-    }
+        }
+    });
 }
